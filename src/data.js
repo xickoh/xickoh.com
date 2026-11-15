@@ -20,9 +20,10 @@ export const LINKS = {
 }
 
 export const SHEET = [
-  ['Classe', 'Developer'],
+  ['Classe', 'Programador Analista'],
   ['Nível', null], // preenchido com a idade
-  ['Missão atual', 'Pixel Fantasy'],
+  ['Trabalho', 'Porto Editora'],
+  ['Missão pessoal', 'Pixel Fantasy'],
   ['Base', 'Portugal'],
   ['Línguas', 'Português, Inglês'],
 ]
@@ -62,7 +63,12 @@ export const SKILLS = [
 
 export const JOURNEY = [
   {
-    when: 'Agora',
+    when: '2022 – Agora',
+    title: 'Programador Analista',
+    where: 'Porto Editora',
+  },
+  {
+    when: 'Concluído',
     title: 'Engenharia Informática',
     where: 'Escola Superior de Tecnologia e Gestão, Politécnico do Porto',
   },

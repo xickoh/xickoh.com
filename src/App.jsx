@@ -68,8 +68,9 @@ function About({ age }) {
       <div className="about">
         <div className="card text">
           <p>
-            Chamo-me Francisco, tenho {age} anos e sou developer. Gosto de tudo o que tenha a
-            ver com computadores, tecnologia, internet, software e videojogos.
+            Chamo-me Francisco, tenho {age} anos e sou programador analista na{' '}
+            <strong>Porto Editora</strong>. Gosto de tudo o que tenha a ver com computadores,
+            tecnologia, internet, software e videojogos.
           </p>
           <p>
             Comecei a programar aos 13 anos e já fiz muitos projetos, incluindo um jogo de
@@ -77,7 +78,7 @@ function About({ age }) {
             vontade de aprender mais e de fazer melhor.
           </p>
           <p>
-            Agora a minha missão é o <strong>Pixel Fantasy</strong>: um jogo em Godot que mistura
+            Fora do trabalho, a minha missão é o <strong>Pixel Fantasy</strong>: um jogo em Godot que mistura
             o que mais gosto em RuneScape, Metin2, Terraria e Diablo. Vou documentando tudo num
             diário de desenvolvimento.
           </p>
