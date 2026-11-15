@@ -16,7 +16,7 @@ export const LINKS = {
   github: 'https://github.com/xickoh',
   steam: 'https://steamcommunity.com/id/xickoh/',
   linkedin: 'https://www.linkedin.com/in/francisco-nogueira-922437232/',
-  journal: 'https://github.com/xickoh/pixel-fantasy-journal',
+  journal: 'https://pixelfantasy.xickoh.com/',
 }
 
 export const SHEET = [
@@ -35,7 +35,7 @@ export const PROJECTS = [
       'O diário de desenvolvimento do Pixel Fantasy: funcionalidades, capturas e GIFs, devlog por dia e uma wiki com itens, inimigos e mecânicas.',
     tags: ['HTML', 'CSS', 'JavaScript', 'Python'],
     href: LINKS.journal,
-    cta: 'Ver no GitHub',
+    cta: 'Abrir o diário',
   },
   {
     name: 'Pixel Fantasy',

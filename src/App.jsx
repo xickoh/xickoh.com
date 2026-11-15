@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import banner from './assets/banner.png'
 import { getAge, JOURNEY, LIKES, LINKS, PROJECTS, SHEET, SKILLS, SOCIALS } from './data.js'
 
@@ -65,7 +66,7 @@ function About({ age }) {
   return (
     <Section id="sobre" title="Sobre mim">
       <div className="about">
-        <div className="panel notch text">
+        <div className="card text">
           <p>
             Chamo-me Francisco, tenho {age} anos e sou developer. Gosto de tudo o que tenha a
             ver com computadores, tecnologia, internet, software e videojogos.
@@ -88,7 +89,7 @@ function About({ age }) {
             ))}
           </ul>
         </div>
-        <aside className="panel notch sheet" aria-label="Ficha de personagem">
+        <aside className="card sheet" aria-label="Ficha de personagem">
           <h3>Ficha</h3>
           <dl>
             {sheet.map(([k, v]) => (
@@ -109,7 +110,7 @@ function Projects() {
     <Section id="projetos" title="Projetos">
       <ul className="projects">
         {PROJECTS.map((p) => (
-          <li key={p.name} className="panel notch project">
+          <li key={p.name} className="card project">
             <div className="project-head">
               <h3>{p.name}</h3>
               <span className="status">{p.status}</span>
@@ -122,7 +123,7 @@ function Projects() {
             </ul>
             {p.href && (
               <a className="btn small" href={p.href} target="_blank" rel="noreferrer">
-                {p.cta} ▶
+                {p.cta} →
               </a>
             )}
           </li>
@@ -137,7 +138,7 @@ function Skills() {
     <Section id="skills" title="Skills">
       <div className="skills">
         {SKILLS.map((g) => (
-          <div key={g.group} className="panel notch skill">
+          <div key={g.group} className="card skill">
             <h3>{g.group}</h3>
             <ul className="tags">
               {g.items.map((i) => (
@@ -158,7 +159,7 @@ function Journey() {
         {JOURNEY.map((j) => (
           <li key={j.title}>
             <span className="when">{j.when}</span>
-            <div className="panel notch">
+            <div className="card">
               <h3>{j.title}</h3>
               <p>{j.where}</p>
             </div>
@@ -175,7 +176,7 @@ function Contacts() {
       <ul className="socials">
         {SOCIALS.map((c) => (
           <li key={c.name}>
-            <a className="panel notch social" href={c.href} target="_blank" rel="noreferrer">
+            <a className="card social" href={c.href} target="_blank" rel="noreferrer">
               <h3>{c.name}</h3>
               <span className="handle">{c.handle}</span>
               <p>{c.text}</p>
@@ -189,6 +190,18 @@ function Contacts() {
 
 export default function App() {
   const age = getAge()
+  // Realce "reveal" do Fluent: os cartões sabem onde está o ponteiro.
+  useEffect(() => {
+    const onMove = (e) => {
+      const card = e.target.closest?.('.card')
+      if (!card) return
+      const r = card.getBoundingClientRect()
+      card.style.setProperty('--mx', `${e.clientX - r.left}px`)
+      card.style.setProperty('--my', `${e.clientY - r.top}px`)
+    }
+    document.addEventListener('pointermove', onMove, { passive: true })
+    return () => document.removeEventListener('pointermove', onMove)
+  }, [])
   return (
     <>
       <nav className="topbar">
@@ -213,7 +226,7 @@ export default function App() {
         <Contacts />
       </main>
       <footer className="footer">
-        <p>Feito à mão, pixel a pixel.</p>
+        <p>Francisco · xickoh</p>
         <p className="foot-links">
           <a href={LINKS.github} target="_blank" rel="noreferrer">
             GitHub
