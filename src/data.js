@@ -68,7 +68,7 @@ export const JOURNEY = [
     where: 'Porto Editora',
   },
   {
-    when: 'Concluído',
+    when: 'A terminar',
     title: 'Engenharia Informática',
     where: 'Escola Superior de Tecnologia e Gestão, Politécnico do Porto',
   },

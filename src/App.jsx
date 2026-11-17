@@ -203,6 +203,20 @@ export default function App() {
     document.addEventListener('pointermove', onMove, { passive: true })
     return () => document.removeEventListener('pointermove', onMove)
   }, [])
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    let raf = 0
+    const tick = () => {
+      raf = 0
+      const h = document.querySelector('.banner-wrap')?.offsetHeight ?? 400
+      const shift = Math.min(window.scrollY * 0.35, h * 0.15)
+      document.documentElement.style.setProperty('--py', shift.toFixed(1))
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(tick) }
+    tick()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf) }
+  }, [])
   return (
     <>
       <nav className="topbar">
