@@ -264,7 +264,7 @@ export default function Timeline() {
           {endOp > 0 && (
             <div className="caption end" style={{ opacity: endOp }}>
               <h2>{END.title}</h2>
-              <p>{END.level()} · Francisco Nogueira</p>
+              <p>{END.level()} · Francisco de Assis</p>
               <div className="links">
                 <a href={LINKS.github} target="_blank" rel="noreferrer">
                   GitHub
