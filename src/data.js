@@ -99,5 +99,5 @@ export const LIKES = [
 export const SOCIALS = [
   { name: 'GitHub', handle: 'xickoh', text: 'O código e os projetos.', href: LINKS.github },
   { name: 'Steam', handle: 'xickoh', text: 'Onde jogo quando não estou a programar.', href: LINKS.steam },
-  { name: 'LinkedIn', handle: 'Francisco Nogueira', text: 'O percurso profissional.', href: LINKS.linkedin },
+  { name: 'LinkedIn', handle: 'Francisco de Assis', text: 'O percurso profissional.', href: LINKS.linkedin },
 ]
