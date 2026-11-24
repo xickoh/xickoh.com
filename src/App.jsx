@@ -225,6 +225,7 @@ export default function App() {
           xickoh
         </a>
         <div className="links">
+          <a href="/">Timeline</a>
           {NAV.map(([id, label]) => (
             <a key={id} href={`#${id}`}>
               {label}
