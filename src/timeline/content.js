@@ -82,7 +82,7 @@ export const CAPTIONS = [
 ]
 
 export const INTRO = {
-  title: 'Francisco Nogueira',
+  title: 'Francisco de Assis',
   text: 'Se a minha vida fosse uma página',
   hint: 'Faz scroll para avançar',
 }
