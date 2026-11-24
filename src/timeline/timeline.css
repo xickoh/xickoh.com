@@ -38,10 +38,20 @@ button {
 
 /* ---------- palco ---------- */
 
+.unit {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100svh;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .stage {
   position: sticky;
   top: 0;
-  height: 100svh;
+  height: 100dvh;
   overflow: hidden;
   color: var(--ink);
 }
@@ -190,6 +200,66 @@ button {
 .hot.on:hover,
 .hot.on:focus-visible {
   filter: brightness(1.18) drop-shadow(0 0 5px rgb(255 240 190 / 0.9));
+}
+
+/* Golo: confettis a saltar da baliza e o «GOAL!» a aparecer e a sumir. */
+
+.goal rect {
+  opacity: 0;
+  animation: confetti 1.3s cubic-bezier(0.2, 0.7, 0.4, 1) forwards;
+}
+
+.goal text {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  fill: #f2c230;
+  paint-order: stroke;
+  stroke: #15182b;
+  stroke-width: 3px;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: goal-pop 1.5s ease-out forwards;
+}
+
+@keyframes confetti {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0);
+  }
+  55% {
+    opacity: 1;
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), calc(var(--dy) + 46px)) rotate(calc(var(--rot) * 1.6));
+  }
+}
+
+@keyframes goal-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  18% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+  30%,
+  75% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1) translateY(-8px);
+  }
+}
+
+.sticker {
+  transition: fill 0.3s;
 }
 
 .block {
@@ -362,6 +432,33 @@ button {
   text-transform: uppercase;
 }
 
+.hud-left {
+  display: grid;
+  justify-items: start;
+  gap: 5px;
+}
+
+.play {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  transition: opacity 0.15s;
+}
+
+.play:hover,
+.play:focus-visible,
+.play[aria-pressed='true'] {
+  opacity: 1;
+}
+
 .hud-right {
   display: flex;
   gap: 8px;
@@ -451,9 +548,15 @@ button {
   translate: 0;
 }
 
-.minimap button:hover span,
 .minimap button:focus-visible span {
   opacity: 1;
+}
+
+/* Num ecrã tátil o «hover» fica preso depois do toque e o nome não saía de lá. */
+@media (hover: hover) {
+  .minimap button:hover span {
+    opacity: 1;
+  }
 }
 
 .fly-photo {
@@ -650,6 +753,34 @@ button {
   margin-top: 14px;
   border-radius: 10px;
   image-rendering: pixelated;
+}
+
+/* Sobre mim */
+
+.about-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-top: 14px;
+}
+
+.portrait {
+  flex: none;
+  width: 150px;
+  border: 8px solid #b9975b;
+  border-radius: 4px;
+}
+
+.about .tags a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (max-width: 520px) {
+  .about-row {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 /* Baú */

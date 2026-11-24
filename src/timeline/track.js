@@ -129,9 +129,12 @@ export function locate(u) {
 // Marcos do caminho em miniatura.
 export const MARKS = [
   { label: 'Barreiro', u: 0 },
-  { label: 'Primeiro computador', u: at('pc', 0.25) },
-  { label: 'Secundário', u: at('secundario', 0.15) },
-  { label: 'Lisboa', u: at('fixeads', 0.4) },
+  { label: 'Jogos com os amigos', u: at('jogos', 0.4) },
+  { label: 'Primeiras experiências', u: at('pc', 0.25) },
+  { label: 'Secundário', u: at('secundario', DAY_NIGHT.secundario[0]) },
+  { label: "Hunt n' Fight", u: at('secundario', DAY_NIGHT.secundario[1]) },
+  { label: 'FixeAds', u: at('fixeads', 0.4) },
+  { label: 'Lusófona', u: at('lusofona', 0.4) },
   { label: 'ESTG', u: at('estg', 0.4) },
   { label: 'Porto Editora', u: at('presente', DAY_NIGHT.presente[0]) },
   { label: 'À noite', u: at('presente', DAY_NIGHT.presente[1]) },

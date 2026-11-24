@@ -2,6 +2,7 @@
 // Desenhada à volta do centro do compartimento (x = 0), com o chão em y = 0.
 import { useEffect, useRef, useState } from 'react'
 import banner from '../assets/banner.png'
+import photo from '../assets/eu.jpg'
 import { HOBBIES, SKILLS_NOTE } from './content.js'
 import { REDUCED } from './motion.js'
 
@@ -71,28 +72,99 @@ function CodeScreen({ running }) {
   )
 }
 
-// A bola fica entre a picareta e o baú, para nunca parar à frente de nenhum dos dois.
+// A bola e o carro ficam entre a picareta e o baú, para nunca pararem à frente de nenhum dos dois.
 const BALL_MIN = -188
 const BALL_MAX = 136
+const R = 11
+const rand = (a, b) => a + Math.random() * (b - a)
+// A baliza fica encostada ao baú, virada para a esquerda: a boca em GOAL_X, a trave em GOAL_TOP.
+const GOAL_X = 116
+const GOAL_TOP = -46
+const CONFETTI = ['#f2c230', '#d2493f', '#3d7ed6', '#4fa55f', '#f4f1ea', '#e8833a']
 
-function Ball({ on, onNote }) {
-  const ref = useRef(null)
-  const s = useRef({ x: 118, y: -11, vx: 0, vy: 0, rot: 0, raf: 0, last: 0 })
-  const R = 11
+// Rocket League: um toque no carro ou na bola e o carro acelera (ou voa) até à bola, de boost ligado, e chuta-a.
+function RocketLeague({ on, onNote }) {
+  const [goal, setGoal] = useState(0)
+  const ballRef = useRef(null)
+  const carRef = useRef(null)
+  const flameRef = useRef(null)
+  const s = useRef({
+    b: { x: 40, y: -R, vx: 0, vy: 0, rot: 0, scored: false },
+    c: { x: -40, y: 0, vx: 0, vy: 0, rot: 0, face: 1, mode: 'idle', since: 0 },
+    raf: 0,
+    last: 0,
+  })
 
   const draw = () => {
-    const b = s.current
-    ref.current?.setAttribute('transform', `translate(${b.x} ${b.y}) rotate(${b.rot})`)
+    const { b, c } = s.current
+    ballRef.current?.setAttribute('transform', `translate(${b.x} ${b.y}) rotate(${b.rot})`)
+    carRef.current?.setAttribute('transform', `translate(${c.x} ${c.y}) rotate(${c.rot}) scale(${c.face} 1)`)
+    flameRef.current?.setAttribute('opacity', c.mode === 'chase' ? 1 : 0)
   }
 
   const step = (now) => {
-    const b = s.current
-    const dt = Math.min(0.032, (now - b.last) / 1000)
-    b.last = now
+    const st = s.current
+    const { b, c } = st
+    const dt = Math.min(0.032, (now - st.last) / 1000)
+    st.last = now
+
+    if (c.mode === 'chase') {
+      const dx = b.x - c.x
+      const dy = b.y - (c.y - 7)
+      const dist = Math.hypot(dx, dy)
+      if (Math.abs(dx) > 2) c.face = dx > 0 ? 1 : -1
+      const move = Math.min(560 * dt, dist)
+      c.x += (dx / (dist || 1)) * move
+      c.y = Math.min(0, c.y + (dy / (dist || 1)) * move)
+      c.rot = c.y < 0 || dy < -10 ? (c.face * Math.atan2(dy, Math.abs(dx)) * 180) / Math.PI : 0
+      if (dist < 20 || now - c.since > 3000) {
+        if (dist < 20) {
+          // Dentro da baliza só dá para a chutar cá para fora.
+          b.vx = (b.x > GOAL_X ? -1 : c.face) * rand(260, 500)
+          b.vy = -rand(420, 680)
+        }
+        c.mode = 'coast'
+        c.vx = c.face * 220
+        c.vy = 0
+      }
+    } else if (c.mode === 'coast') {
+      c.vy += 1100 * dt
+      c.x += c.vx * dt
+      c.y += c.vy * dt
+      c.vx *= 1 - Math.min(1, 3 * dt)
+      c.rot *= 1 - Math.min(1, 8 * dt)
+      if (c.y >= 0) {
+        c.y = 0
+        c.vy = 0
+      }
+      if (c.y === 0 && Math.abs(c.vx) < 8) {
+        c.mode = 'idle'
+        c.rot = 0
+      }
+    }
+    c.x = Math.min(BALL_MAX, Math.max(BALL_MIN, c.x))
+
+    const wasInside = b.x > GOAL_X - R
     b.vy += 1100 * dt
     b.x += b.vx * dt
     b.y += b.vy * dt
     b.rot += b.vx * dt * 4
+    // A baliza: por cima da trave a bola bate no poste e volta; lá dentro não passa da trave.
+    const under = b.y > GOAL_TOP + R
+    if (!wasInside && !under && b.x > GOAL_X - R) {
+      b.x = GOAL_X - R
+      b.vx = -Math.abs(b.vx) * 0.8
+    }
+    if (wasInside && !under) {
+      b.y = GOAL_TOP + R
+      b.vy = Math.abs(b.vy) * 0.5
+    }
+    if (b.x > GOAL_X + 4 && !b.scored) {
+      b.scored = true
+      setGoal((g) => g + 1)
+      onNote(HOBBIES.goal)
+    }
+    if (b.x < GOAL_X - R) b.scored = false
     if (b.x < BALL_MIN) {
       b.x = BALL_MIN
       b.vx = Math.abs(b.vx) * 0.8
@@ -112,40 +184,183 @@ function Ball({ on, onNote }) {
       if (Math.abs(b.vy) < 60) b.vy = 0
     }
     draw()
-    if (b.vy === 0 && b.y >= -R && Math.abs(b.vx) < 6) {
-      b.raf = 0
+    const ballStill = b.vy === 0 && b.y >= -R && Math.abs(b.vx) < 6
+    if (ballStill && c.mode === 'idle') {
+      st.raf = 0
       return
     }
-    b.raf = requestAnimationFrame(step)
+    st.raf = requestAnimationFrame(step)
   }
 
   useEffect(() => {
     draw()
-    const b = s.current
-    return () => cancelAnimationFrame(b.raf)
+    const st = s.current
+    return () => cancelAnimationFrame(st.raf)
   }, [])
 
-  const kick = () => {
-    const b = s.current
-    const dir = b.x > 60 ? -1 : b.x < -60 ? 1 : Math.random() > 0.5 ? 1 : -1
-    b.vx = dir * (220 + Math.random() * 260)
-    b.vy = -(420 + Math.random() * 260)
+  const play = () => {
+    const st = s.current
     onNote(HOBBIES.ball)
     if (REDUCED) return
-    if (!b.raf) {
-      b.last = performance.now()
-      b.raf = requestAnimationFrame(step)
+    if (st.c.mode === 'idle') {
+      st.c.mode = 'chase'
+      st.c.since = performance.now()
+    }
+    if (!st.raf) {
+      st.last = performance.now()
+      st.raf = requestAnimationFrame(step)
     }
   }
 
   return (
-    <Hot on={on} label="Bola: Rocket League" onPress={kick}>
-      <g ref={ref}>
+    <Hot on={on} label="Carro e bola: Rocket League" onPress={play}>
+      <g pointerEvents="none">
+        <path d={`M${GOAL_X} 0 V${GOAL_TOP} H${GOAL_X + 18} L${GOAL_X + 31} 0`} fill="#fff" fillOpacity="0.07" stroke="#f4f1ea" strokeWidth="2.6" strokeLinejoin="round" />
+        <path
+          d={`M${GOAL_X} -12 H${GOAL_X + 28} M${GOAL_X} -24 H${GOAL_X + 24} M${GOAL_X} -36 H${GOAL_X + 21} M${GOAL_X + 9} ${GOAL_TOP} V0 M${GOAL_X + 18} ${GOAL_TOP} V0`}
+          stroke="#f4f1ea"
+          strokeWidth="0.8"
+          opacity="0.45"
+        />
+      </g>
+      <g ref={carRef}>
+        <rect x="-22" y="-22" width="44" height="24" fill="transparent" />
+        <g ref={flameRef} opacity="0">
+          <path d="M-17 -6 L-40 -8.5 L-28 -10 L-44 -12 L-17 -12 Z" fill="#ff9b3d" />
+          <path d="M-17 -7.5 L-30 -9.5 L-17 -11 Z" fill="#ffe08a" />
+        </g>
+        <rect x="-20" y="-17" width="6" height="2.4" rx="1" fill="#1f5fae" />
+        <rect x="-18" y="-16" width="2.4" height="5" fill="#1f5fae" />
+        <path d="M-17 -4 V-10 Q-17 -13 -13 -13 H-6 L-1 -18 H8 L13 -13 H15 Q18 -13 18 -9 V-4 Z" fill="#2f7fd6" />
+        <path d="M-3.5 -13 L0 -16.5 H7 L10.5 -13 Z" fill="#cfe9fa" />
+        <circle cx="-9" cy="-4" r="4.4" fill="#20243a" />
+        <circle cx="10" cy="-4" r="4.4" fill="#20243a" />
+        <circle cx="-9" cy="-4" r="1.6" fill="#aeb9c7" />
+        <circle cx="10" cy="-4" r="1.6" fill="#aeb9c7" />
+      </g>
+      <g ref={ballRef}>
         <circle r={R} fill="#e3e8ee" />
         <path d="M0 -5 L4.8 -1.5 L3 4 H-3 L-4.8 -1.5 Z" fill="#5d6b82" />
         <path d="M0 -5 V-11 M4.8 -1.5 L10.4 -3.4 M3 4 L6.4 9 M-3 4 L-6.4 9 M-4.8 -1.5 L-10.4 -3.4" stroke="#5d6b82" strokeWidth="1.5" />
         <circle r={R} fill="none" stroke="#5d6b82" strokeWidth="1.5" />
       </g>
+      {goal > 0 && (
+        <g key={goal} className="goal" pointerEvents="none" transform={`translate(${GOAL_X + 10} ${GOAL_TOP - 6})`}>
+          {Array.from({ length: 18 }, (_, i) => (
+            <rect
+              key={i}
+              x="-2"
+              y="-2"
+              width={i % 3 ? 4 : 6}
+              height="4"
+              fill={CONFETTI[i % CONFETTI.length]}
+              style={{
+                '--dx': `${Math.cos(i * 2.4) * (26 + ((i * 7) % 34))}px`,
+                '--dy': `${-22 - ((i * 13) % 52)}px`,
+                '--rot': `${(i % 2 ? 1 : -1) * (200 + i * 30)}deg`,
+                animationDelay: `${(i % 5) * 30}ms`,
+              }}
+            />
+          ))}
+          <text y="-40" textAnchor="middle">
+            GOAL!
+          </text>
+        </g>
+      )}
+    </Hot>
+  )
+}
+
+// Cubos de Rubik na prateleira: um 4x4 e um 3x3, vistos de frente. Cada toque alterna entre resolvidos e
+// baralhados, e os cubos saltam, dão uma ou duas cambalhotas e caem noutro sítio da prateleira.
+const STICKERS = ['#f4f1ea', '#f2c230', '#d2493f', '#e8833a', '#3d7ed6', '#4fa55f']
+const SHELF = [-238, -150, -196] // esquerda, direita e tampo
+const CUBES = [
+  { n: 4, size: 22, x: -234, face: 5 },
+  { n: 3, size: 17, x: -204, face: 4 },
+]
+const scramble = () => CUBES.map((c) => Array.from({ length: c.n * c.n }, () => Math.floor(Math.random() * 6)))
+const solve = () => CUBES.map((c) => Array.from({ length: c.n * c.n }, () => c.face))
+
+// Sítios novos para os dois cubos, sem se sobreporem nem saírem da prateleira.
+function landing() {
+  const order = Math.random() < 0.5 ? [0, 1] : [1, 0]
+  const free = SHELF[1] - SHELF[0] - CUBES[0].size - CUBES[1].size - 4
+  const left = Math.random() * free
+  const gap = 4 + Math.random() * (free - left)
+  const xs = []
+  xs[order[0]] = SHELF[0] + left
+  xs[order[1]] = xs[order[0]] + CUBES[order[0]].size + gap
+  return xs
+}
+
+function Cubes({ on, onNote }) {
+  const [solved, setSolved] = useState(true)
+  const [colors, setColors] = useState(solve)
+  const refs = useRef([])
+  const anim = useRef({ xs: CUBES.map((c) => c.x), raf: 0 })
+
+  const place = (i, x, lift = 0, rot = 0) => {
+    const half = CUBES[i].size / 2
+    refs.current[i]?.setAttribute('transform', `translate(${x} ${SHELF[2] - CUBES[i].size - lift}) rotate(${rot} ${half} ${half})`)
+  }
+
+  useEffect(() => {
+    const a = anim.current
+    a.xs.forEach((x, i) => place(i, x))
+    return () => cancelAnimationFrame(a.raf)
+  }, [])
+
+  const toggle = () => {
+    setColors(solved ? scramble() : solve())
+    setSolved(!solved)
+    onNote(HOBBIES.cubes)
+    const a = anim.current
+    const from = a.xs
+    const to = landing()
+    a.xs = to
+    cancelAnimationFrame(a.raf)
+    if (REDUCED) {
+      to.forEach((x, i) => place(i, x))
+      return
+    }
+    const jumps = CUBES.map(() => ({
+      height: 34 + Math.random() * 22,
+      turns: (Math.random() < 0.5 ? -1 : 1) * (Math.random() < 0.5 ? 1 : 2) * 360,
+    }))
+    const start = performance.now()
+    const tick = (now) => {
+      const p = Math.min(1, (now - start) / 720)
+      jumps.forEach((j, i) => place(i, from[i] + (to[i] - from[i]) * p, 4 * j.height * p * (1 - p), j.turns * p))
+      if (p < 1) a.raf = requestAnimationFrame(tick)
+    }
+    a.raf = requestAnimationFrame(tick)
+  }
+
+  return (
+    <Hot on={on} label={`Cubos de Rubik: ${solved ? 'baralhar' : 'resolver'}`} onPress={toggle}>
+      {CUBES.map((c, ci) => {
+        const cell = c.size / c.n
+        return (
+          <g key={c.n} ref={(el) => (refs.current[ci] = el)}>
+            <rect x="-4" y="-4" width={c.size + 8} height={c.size + 8} fill="transparent" />
+            <rect width={c.size} height={c.size} rx="1.5" fill="#15182b" />
+            {colors[ci].map((color, i) => (
+              <rect
+                key={i}
+                className="sticker"
+                x={(i % c.n) * cell + 0.6}
+                y={Math.floor(i / c.n) * cell + 0.6}
+                width={cell - 1.2}
+                height={cell - 1.2}
+                rx="0.8"
+                fill={STICKERS[color]}
+                style={{ transitionDelay: `${(i % c.n) * 40}ms` }}
+              />
+            ))}
+          </g>
+        )
+      })}
     </Hot>
   )
 }
@@ -288,13 +503,11 @@ export default function Present({ night, t, active, onNote, onOpen }) {
       {/* Só de noite: o quarto */}
       <g opacity={night}>
         <g transform={WALL}>
-        <rect x="-112" y="-302" width="64" height="82" rx="3" fill="#3f8f8a" />
-        <path d="M-104 -232 L-88 -262 L-76 -244 L-66 -256 L-56 -232 Z" fill="#f6efc9" opacity="0.9" />
-        <circle cx="-64" cy="-284" r="6" fill="#f6efc9" />
+        <Hot on={room} label="Moldura: sobre mim" onPress={() => onOpen('about')}>
+          <rect x="-114" y="-304" width="68" height="86" rx="3" fill="#b9975b" />
+          <image href={photo} x="-109" y="-299" width="58" height="76" preserveAspectRatio="xMidYMid slice" />
+        </Hot>
         <rect x="-240" y="-196" width="92" height="6" rx="2" fill="#8d6b4a" />
-        {['#c96f4a', '#e2c05a', '#5b8c5a', '#3d7ea6'].map((c, i) => (
-          <rect key={c} x={-236 + i * 11} y={-226 + (i % 2) * 5} width="9" height={30 - (i % 2) * 5} fill={c} />
-        ))}
         <Hot
           on={room}
           label="Painel de competências: Old School RuneScape"
@@ -316,6 +529,7 @@ export default function Present({ night, t, active, onNote, onOpen }) {
             />
           ))}
         </Hot>
+        <Cubes on={room} onNote={onNote} />
         </g>
         <Pickaxe on={room} onNote={onNote} />
         <Hot on={room} label="Baú: os projetos" onPress={() => onOpen('chest')}>
@@ -379,7 +593,7 @@ export default function Present({ night, t, active, onNote, onOpen }) {
           <rect x="80" y="-57" width="20" height="5" rx="1" fill="#f1ead9" />
           <rect x="74" y="-62" width="32" height="18" fill="transparent" />
         </Hot>
-        <Ball on={room} onNote={onNote} />
+        <RocketLeague on={room} onNote={onNote} />
       </g>
     </g>
   )

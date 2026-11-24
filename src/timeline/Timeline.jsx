@@ -17,6 +17,11 @@ const fade = (u, from, to, edge = 0.14) => clamp(Math.min((u - from) / edge, (to
 const PARAMS = new URLSearchParams(location.search)
 const FORCED = PARAMS.has('u') ? Number(PARAMS.get('u')) : null
 
+// Velocidade da reprodução automática, em alturas de ecrã por segundo.
+const AUTO_WALK = 0.3
+const AUTO_READ = 0.15
+const MOVING = new Set(['walk', 'crawl', 'boat', 'train'])
+
 const HNF_AT = at('secundario', 0.55)
 const PF_AT = at('presente', 0.6)
 
@@ -56,16 +61,18 @@ function useViewport() {
 }
 
 export default function Timeline() {
-  const stage = useRef(null)
+  const unit = useRef(null) // 100svh: não muda quando a barra do browser do telemóvel se esconde
   const vp = useViewport()
   const [u, setU] = useState(FORCED ?? 0)
   const [maxU, setMaxU] = useState(FORCED ?? 0)
   const [open, setOpen] = useState(PARAMS.get('open'))
   const [note, setNote] = useState(null)
   const [fly, setFly] = useState(false)
+  const [playing, setPlaying] = useState(false)
 
   const go = useCallback((target) => {
-    scrollTo({ top: target * stage.current.clientHeight, behavior: REDUCED ? 'auto' : 'smooth' })
+    setPlaying(false)
+    scrollTo({ top: target * unit.current.clientHeight, behavior: REDUCED ? 'auto' : 'smooth' })
   }, [])
 
   useEffect(() => {
@@ -73,7 +80,7 @@ export default function Timeline() {
     let raf = 0
     const read = () => {
       raf = 0
-      const v = clamp(scrollY / stage.current.clientHeight, 0, TOTAL)
+      const v = clamp(scrollY / unit.current.clientHeight, 0, TOTAL)
       setU(v)
       setMaxU((m) => Math.max(m, v))
     }
@@ -83,7 +90,7 @@ export default function Timeline() {
     addEventListener('scroll', on, { passive: true })
     if (location.hash === '#presente') {
       const h = new Date().getHours()
-      scrollTo({ top: at('presente', DAY_NIGHT.presente[h >= 7 && h < 19 ? 0 : 1]) * stage.current.clientHeight })
+      scrollTo({ top: at('presente', DAY_NIGHT.presente[h >= 7 && h < 19 ? 0 : 1]) * unit.current.clientHeight })
     }
     read()
     return () => {
@@ -91,6 +98,49 @@ export default function Timeline() {
       cancelAnimationFrame(raf)
     }
   }, [])
+
+  // Reprodução automática: avança como se fosse scroll, mais devagar nas cenas com texto.
+  // Qualquer scroll do utilizador pára-a; uma janela aberta suspende-a.
+  useEffect(() => {
+    if (!playing || open) return
+    const h = unit.current.clientHeight
+    let raf = 0
+    let last = performance.now()
+    let pos = scrollY
+    const tick = (now) => {
+      const dt = Math.min(0.05, (now - last) / 1000)
+      last = now
+      const moving = MOVING.has(locate(pos / h).pose)
+      pos += (moving ? AUTO_WALK : AUTO_READ) * h * dt
+      if (pos >= TOTAL * h) {
+        scrollTo(0, TOTAL * h)
+        setPlaying(false)
+        return
+      }
+      scrollTo(0, pos)
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    const stop = () => setPlaying(false)
+    const key = (e) => {
+      if (e.target.closest?.('button, a, [role="button"]')) return
+      if ([' ', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.key)) stop()
+    }
+    addEventListener('wheel', stop, { passive: true })
+    addEventListener('touchmove', stop, { passive: true })
+    addEventListener('keydown', key)
+    return () => {
+      cancelAnimationFrame(raf)
+      removeEventListener('wheel', stop)
+      removeEventListener('touchmove', stop)
+      removeEventListener('keydown', key)
+    }
+  }, [playing, open])
+
+  const togglePlay = () => {
+    if (!playing && scrollY >= (TOTAL - 0.02) * unit.current.clientHeight) scrollTo(0, 0)
+    setPlaying(!playing)
+  }
 
   const say = useCallback((text) => setNote({ text, key: Date.now() }), [])
   useEffect(() => {
@@ -124,9 +174,9 @@ export default function Timeline() {
   const endOp = st.id === 'fim' ? 1 : st.id === 'caminho' ? clamp((st.t - 0.6) / 0.3) : 0
 
   return (
-    <div className="scroller" style={{ height: `calc(${TOTAL + 1} * 100svh)` }}>
+    <div className="scroller" style={{ height: `calc(${TOTAL} * 100svh + 100lvh)` }}>
+      <div ref={unit} className="unit" aria-hidden="true" />
       <div
-        ref={stage}
         className={`stage ${portrait ? 'portrait' : ''} ${dark ? 'dark' : ''}`}
         style={{ background: `rgb(${sky.join(' ')})` }}
       >
@@ -225,7 +275,6 @@ export default function Timeline() {
                 <a href={LINKS.steam} target="_blank" rel="noreferrer">
                   Steam
                 </a>
-                <a href="/cv/">Versão curta</a>
               </div>
             </div>
           )}
@@ -237,7 +286,15 @@ export default function Timeline() {
         </div>
 
         <header className="hud">
-          <span className="place">{st.place}</span>
+          <span className="hud-left">
+            <span className="place">{st.place}</span>
+            <button type="button" className="play" onClick={togglePlay} aria-pressed={playing}>
+              <svg viewBox="0 0 10 10" width="9" height="9" aria-hidden="true">
+                {playing ? <path d="M1 0 H4 V10 H1 Z M6 0 H9 V10 H6 Z" fill="currentColor" /> : <path d="M1 0 L10 5 L1 10 Z" fill="currentColor" />}
+              </svg>
+              {playing ? 'Pausar' : 'Reproduzir'}
+            </button>
+          </span>
           <span className="hud-right">
             {dayNight && (
               <button type="button" className="pill" onClick={() => go(at(st.id, dayNight[isNight ? 0 : 1]))}>
@@ -252,9 +309,6 @@ export default function Timeline() {
               </svg>
               {count}/3
             </button>
-            <a className="pill" href="/cv/">
-              Versão curta
-            </a>
           </span>
         </header>
 

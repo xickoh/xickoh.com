@@ -98,6 +98,8 @@ export const HOBBIES = {
   planet: "No Man's Sky: um planeta diferente de cada vez.",
   book: 'Engenharia Informática, ESTG. Em conclusão.',
   mug: 'Café. O combustível do dia.',
+  goal: 'What a save!',
+  cubes: 'Para quê resolvê-los, se vou baralhá-los de seguida?',
 }
 
 export const SKILLS_NOTE = 'Old School RuneScape: o grind ensinou-me paciência.'

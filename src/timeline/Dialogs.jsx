@@ -1,7 +1,8 @@
 // As janelas que os objetos abrem: baú, álbum do Hunt n' Fight, projetos e competências.
 import { useEffect, useRef, useState } from 'react'
 import banner from '../assets/banner.png'
-import { PROJECTS, SKILLS } from '../data.js'
+import photo from '../assets/eu.jpg'
+import { getAge, LINKS, PROJECTS, SKILLS } from '../data.js'
 import { ALBUM, CRT_PHOTOS, SKILL_SINCE } from './content.js'
 
 const PHOTOS = Object.entries(
@@ -185,6 +186,39 @@ function Projects({ onClose }) {
 
 const YEAR = new Date().getFullYear()
 
+function About({ onClose }) {
+  return (
+    <Modal title="Sobre mim" className="about" onClose={onClose}>
+      <div className="about-row">
+        <img className="portrait" src={photo} alt="Retrato do Francisco" />
+        <div>
+          <p>
+            Chamo-me Francisco, tenho {getAge()} anos e sou programador analista na Porto Editora.
+          </p>
+          <p>Gosto de tudo o que tenha a ver com computadores, tecnologia, internet, software e videojogos.</p>
+          <ul className="tags">
+            <li>
+              <a href={LINKS.github} target="_blank" rel="noreferrer">
+                GitHub
+              </a>
+            </li>
+            <li>
+              <a href={LINKS.linkedin} target="_blank" rel="noreferrer">
+                LinkedIn
+              </a>
+            </li>
+            <li>
+              <a href={LINKS.steam} target="_blank" rel="noreferrer">
+                Steam
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </Modal>
+  )
+}
+
 function Skills({ onClose }) {
   return (
     <Modal title="Competências" className="skills" onClose={onClose}>
@@ -215,5 +249,6 @@ export default function Dialogs({ open, got, onOpen, onClose }) {
   if (open === 'chest') return <Chest got={got} onOpen={onOpen} onClose={onClose} />
   if (open === 'projects') return <Projects onClose={onClose} />
   if (open === 'skills') return <Skills onClose={onClose} />
+  if (open === 'about') return <About onClose={onClose} />
   return null
 }
