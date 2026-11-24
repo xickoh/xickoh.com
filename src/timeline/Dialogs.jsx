@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import banner from '../assets/banner.png'
 import { PROJECTS, SKILLS } from '../data.js'
-import { ALBUM, SKILL_SINCE } from './content.js'
+import { ALBUM, CRT_PHOTOS, SKILL_SINCE } from './content.js'
 
 const PHOTOS = Object.entries(
   import.meta.glob('../assets/hnf/*.jpg', { eager: true, query: '?url', import: 'default' }),
@@ -90,9 +90,45 @@ function Album({ onClose }) {
   )
 }
 
+// O monitor do quarto: algumas imagens do jogo, uma de cada vez.
+function Crt({ onOpen, onClose }) {
+  const [n, setN] = useState(0)
+  const i = CRT_PHOTOS[n]
+  const turn = (d) => setN((v) => (v + d + CRT_PHOTOS.length) % CRT_PHOTOS.length)
+  return (
+    <Modal title="Hunt n' Fight" className="crt" onClose={onClose}>
+      <div
+        className="tube"
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowRight') turn(1)
+          if (e.key === 'ArrowLeft') turn(-1)
+        }}
+      >
+        <img src={PHOTOS[i]} alt={ALBUM[i]} />
+      </div>
+      <p className="crt-caption">{ALBUM[i]}</p>
+      <footer className="crt-panel">
+        <span className="led" aria-hidden="true" />
+        <button type="button" onClick={() => turn(-1)} aria-label="Imagem anterior">
+          ◀
+        </button>
+        <span className="count">
+          {n + 1} / {CRT_PHOTOS.length}
+        </span>
+        <button type="button" onClick={() => turn(1)} aria-label="Imagem seguinte">
+          ▶
+        </button>
+        <button type="button" className="wide" onClick={() => onOpen('album')}>
+          Álbum completo
+        </button>
+      </footer>
+    </Modal>
+  )
+}
+
 function Chest({ got, onOpen, onClose }) {
   const items = [
-    { id: 'album', name: "Hunt n' Fight", sub: 'Álbum de fotografias', has: got.hnf, hint: 'Está algures em Lisboa.' },
+    { id: 'album', name: "Hunt n' Fight", sub: 'Álbum de fotografias', has: got.hnf, hint: 'Está no quarto, nos anos do secundário.' },
     { id: 'projects', name: 'Pixel Fantasy', sub: 'O jogo que estou a fazer', has: got.pf, hint: 'Aparece à noite.' },
     { id: 'projects', name: 'Pixel Fantasy Journal', sub: 'O diário do jogo', has: got.pf, hint: 'Aparece à noite.' },
   ]
@@ -175,6 +211,7 @@ function Skills({ onClose }) {
 
 export default function Dialogs({ open, got, onOpen, onClose }) {
   if (open === 'album') return <Album onClose={onClose} />
+  if (open === 'crt') return <Crt onOpen={onOpen} onClose={onClose} />
   if (open === 'chest') return <Chest got={got} onOpen={onOpen} onClose={onClose} />
   if (open === 'projects') return <Projects onClose={onClose} />
   if (open === 'skills') return <Skills onClose={onClose} />

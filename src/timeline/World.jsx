@@ -330,22 +330,8 @@ export const NearLayer = memo(function NearLayer() {
         <rect x="-34" y="-3" width="28" height="3" rx="1" fill="#cfc7b6" />
       </g>
 
-      {/* A escola */}
-      <g transform={`translate(2260 ${G})`}>
-        <rect x="0" y="-190" width="420" height="190" fill="#f1ead9" />
-        <rect x="-8" y="-200" width="436" height="14" fill="#c96f4a" />
-        {Array.from({ length: 12 }, (_, i) => (
-          <rect key={i} x={24 + (i % 6) * 66} y={-162 + Math.floor(i / 6) * 62} width="40" height="38" rx="2" fill="#a9cfe3" />
-        ))}
-        <rect x="186" y="-56" width="48" height="56" fill="#8c6a4f" />
-        <rect x="150" y="-88" width="120" height="22" rx="3" fill="#2c3345" />
-        <text x="210" y="-72" textAnchor="middle" className="sign light">
-          ESCOLA
-        </text>
-        <rect x="446" y="-150" width="4" height="150" fill="#6b7280" />
-        <path d="M450 -150 h40 v12 h-40 Z" fill="#3f8f5a" />
-        <path d="M450 -138 h40 v12 h-40 Z" fill="#d2493f" />
-      </g>
+      {/* A escola é uma cena à parte (School.jsx), em x = X.schoolRoom */}
+      <Sign x={2110} label="Escola Secundária" />
 
       {/* O cais e o Tejo */}
       <g transform={`translate(2940 ${G})`}>
@@ -412,26 +398,6 @@ export const NearLayer = memo(function NearLayer() {
       <Chair x={X.lusofona} />
       <Desk x={X.lusofona + 14} w={100} />
       <Laptop x={X.lusofona + 30} />
-
-      {/* O quarto do Hunt n' Fight */}
-      <Room x={X.hnf - 130} w={370} h={250} wall="#2e3350" trim="rgba(0,0,0,0.25)">
-        <rect x="40" y="-200" width="80" height="74" rx="4" fill="#161b33" />
-        <circle cx="96" cy="-174" r="12" fill="#f6efc9" />
-        <circle cx="60" cy="-150" r="1.4" fill="#fff" />
-        <circle cx="74" cy="-184" r="1.2" fill="#fff" />
-      </Room>
-      <Chair x={X.hnf} color="#6b7391" />
-      <Desk x={X.hnf + 14} w={130} color="#8d6b4a" />
-      <g transform={`translate(${X.hnf + 62} ${G - 46})`}>
-        <rect x="0" y="-52" width="66" height="44" rx="3" fill="#20243a" />
-        <rect x="3" y="-49" width="60" height="38" fill="#5a4030" />
-        <rect x="16" y="-44" width="42" height="28" fill="#ead9b0" />
-        <rect x="6" y="-44" width="8" height="5" fill="#8c2f25" />
-        <rect x="6" y="-36" width="8" height="5" fill="#7a5a40" />
-        <rect x="6" y="-28" width="8" height="5" fill="#7a5a40" />
-        <rect x="28" y="-8" width="10" height="8" fill="#20243a" />
-        <rect x="-36" y="-3" width="28" height="3" rx="1" fill="#555d7a" />
-      </g>
 
       {/* A estação e a linha */}
       <g transform={`translate(${X.station - 100} ${G})`}>

@@ -5,7 +5,8 @@ import { CAPTIONS, END, INTRO } from './content.js'
 import Dialogs from './Dialogs.jsx'
 import { F_FAR, F_MID, REDUCED } from './motion.js'
 import Present from './Present.jsx'
-import { at, DAY_T, GROUND, locate, MARKS, NIGHT_T, skyAt, TOTAL, VIEW_H, X } from './track.js'
+import School from './School.jsx'
+import { at, DAY_NIGHT, GROUND, locate, MARKS, skyAt, TOTAL, VIEW_H, X } from './track.js'
 import { Boat, FarLayer, MidLayer, NearLayer, Train, Waves } from './World.jsx'
 
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v))
@@ -16,7 +17,7 @@ const fade = (u, from, to, edge = 0.14) => clamp(Math.min((u - from) / edge, (to
 const PARAMS = new URLSearchParams(location.search)
 const FORCED = PARAMS.has('u') ? Number(PARAMS.get('u')) : null
 
-const HNF_AT = at('hnf', 0.5)
+const HNF_AT = at('secundario', 0.55)
 const PF_AT = at('presente', 0.6)
 
 // Onde o boneco é desenhado. No Tejo vai a pé até ao barco, atravessa com ele e sai do outro lado.
@@ -82,7 +83,7 @@ export default function Timeline() {
     addEventListener('scroll', on, { passive: true })
     if (location.hash === '#presente') {
       const h = new Date().getHours()
-      scrollTo({ top: at('presente', h >= 7 && h < 19 ? DAY_T : NIGHT_T) * stage.current.clientHeight })
+      scrollTo({ top: at('presente', DAY_NIGHT.presente[h >= 7 && h < 19 ? 0 : 1]) * stage.current.clientHeight })
     }
     read()
     return () => {
@@ -104,7 +105,7 @@ export default function Timeline() {
   // A fotografia só voa para o baú quando se passa pela cena; num salto pelo caminho em miniatura não.
   const hadHnf = useRef(got.hnf)
   useEffect(() => {
-    if (got.hnf && !hadHnf.current && st.id === 'hnf') setFly(true)
+    if (got.hnf && !hadHnf.current && st.id === 'secundario') setFly(true)
     hadHnf.current = got.hnf
   }, [got.hnf, st.id])
   const pl = place(st)
@@ -112,12 +113,13 @@ export default function Timeline() {
   const sceneH = portrait ? vp.h * 0.56 : vp.h
   const W = (VIEW_H * vp.w) / sceneH
   const follow = pl.x + (portrait ? 0.06 : 0.12) * W
-  const cam = lerp(follow, X.room, st.pin) - W / 2
+  const cam = lerp(follow, st.pinX, st.pin) - W / 2
 
   const sky = skyAt(st)
   const dark = sky[0] * 0.3 + sky[1] * 0.59 + sky[2] * 0.11 < 140
   const inPresent = st.id === 'presente'
   const isNight = st.night > 0.5
+  const dayNight = DAY_NIGHT[st.id] // só nas cenas com dia e noite
   const introOp = st.id === 'intro' ? 1 - clamp((st.t - 0.3) / 0.25) : 0
   const endOp = st.id === 'fim' ? 1 : st.id === 'caminho' ? clamp((st.t - 0.6) / 0.3) : 0
 
@@ -164,7 +166,12 @@ export default function Timeline() {
               strokeDasharray="18 16"
               strokeLinecap="round"
             />
-            {st.pin > 0 && (
+            {st.pin > 0 && st.pinX === X.schoolRoom && (
+              <g transform={`translate(${X.schoolRoom} ${GROUND})`}>
+                <School night={st.night} t={st.id === 'secundario' ? st.t : 0} active={st.id === 'secundario'} onOpen={setOpen} />
+              </g>
+            )}
+            {st.pin > 0 && st.pinX === X.room && (
               <g transform={`translate(${X.room} ${GROUND})`}>
                 <Present night={st.night} t={inPresent ? st.t : st.night} active={inPresent} onNote={say} onOpen={setOpen} />
               </g>
@@ -232,8 +239,8 @@ export default function Timeline() {
         <header className="hud">
           <span className="place">{st.place}</span>
           <span className="hud-right">
-            {inPresent && (
-              <button type="button" className="pill" onClick={() => go(at('presente', isNight ? DAY_T : NIGHT_T))}>
+            {dayNight && (
+              <button type="button" className="pill" onClick={() => go(at(st.id, dayNight[isNight ? 0 : 1]))}>
                 {isNight ? 'Ver de dia' : 'Ver de noite'}
               </button>
             )}

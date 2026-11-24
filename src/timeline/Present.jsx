@@ -22,7 +22,7 @@ const CODE = [
 ]
 
 // Um objeto clicável dentro do SVG, com teclado.
-function Hot({ on, label, onPress, children, className = '', ...rest }) {
+export function Hot({ on, label, onPress, children, className = '', ...rest }) {
   return (
     <g
       className={`hot ${on ? 'on' : ''} ${className}`}

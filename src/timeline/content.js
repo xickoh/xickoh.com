@@ -25,13 +25,19 @@ export const CAPTIONS = [
     from: at('pc', 0.56),
     to: at('pc', 0.98),
     title: 'Depois veio a vontade de perceber como tudo funcionava.',
-    text: 'Escrevo código desde os 13 anos.',
+    text: 'Por isso decidi estudar programação no ensino secundário.',
   },
   {
-    from: at('escola', 0.2),
-    to: at('escola', 0.85),
+    from: at('secundario', 0.03),
+    to: at('secundario', 0.34),
     title: 'Técnico de Programação e Gestão de Sistemas Informáticos',
     text: 'Escola Secundária Augusto Cabrita, Barreiro.',
+  },
+  {
+    from: at('secundario', 0.5),
+    to: at('secundario', 0.9),
+    title: "Foi aqui que fiz o meu primeiro jogo: Hunt n' Fight.",
+    text: 'Toca no computador para o ver.',
   },
   {
     from: at('tejo', 0.2),
@@ -49,12 +55,6 @@ export const CAPTIONS = [
     to: at('lusofona', 0.98),
     title: 'Curso de Especialização Técnica em DevOps',
     text: 'Desenvolvimento de Software e Administração de Sistemas, Universidade Lusófona.',
-  },
-  {
-    from: at('hnf', 0.05),
-    to: at('hnf', 0.98),
-    title: "Nas horas livres, o meu primeiro jogo: Hunt n' Fight.",
-    text: 'Um jogo de estratégia para o browser. Guardado no baú.',
   },
   {
     from: at('norte', 0.2),
@@ -105,6 +105,9 @@ export const SKILLS_NOTE = 'Old School RuneScape: o grind ensinou-me paciência.
 // Ano em que comecei a usar cada tecnologia. O nível na grelha é o número de anos de uso.
 // As que não estiverem aqui aparecem sem nível.
 export const SKILL_SINCE = {}
+
+// As fotografias (pela ordem do álbum, a contar do zero) que o monitor do quarto mostra.
+export const CRT_PHOTOS = [1, 2, 4, 5, 7, 11]
 
 export const ALBUM = [
   'Bem-vindo!',

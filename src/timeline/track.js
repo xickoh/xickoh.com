@@ -9,12 +9,13 @@ export const X = {
   crib: 300,
   games: 1150,
   pc: 1750,
+  school: 2380,
+  schoolRoom: 2450, // centro da sala de aula/quarto
   pier: 3000,
   quay: 4250,
   fixeads: 4700,
   lusofona: 5400,
-  hnf: 6000,
-  station: 6600,
+  station: 6000,
   felgueiras: 7750,
   estg: 8600,
   porto: 8900,
@@ -30,16 +31,16 @@ const SEGS = [
   { id: 'jogos', type: 'stop', x: X.games, len: 0.9, pose: 'sit' },
   { id: 'barreiro2', type: 'walk', x0: X.games, x1: X.pc, len: 0.7 },
   { id: 'pc', type: 'stop', x: X.pc, len: 1.5, pose: 'sit' },
-  { id: 'escola', type: 'walk', x0: X.pc, x1: X.pier, len: 1.3 },
+  { id: 'barreiro3', type: 'walk', x0: X.pc, x1: X.school, len: 0.7 },
+  { id: 'secundario', type: 'stop', x: X.school, len: 2.8, pose: 'sit' },
+  { id: 'escola', type: 'walk', x0: X.school, x1: X.pier, len: 0.7 },
   { id: 'tejo', type: 'walk', x0: X.pier, x1: X.quay, len: 1.1, pose: 'boat' },
   { id: 'lisboa', type: 'walk', x0: X.quay, x1: X.fixeads, len: 0.6 },
   { id: 'fixeads', type: 'stop', x: X.fixeads, len: 0.9, pose: 'sit' },
   { id: 'lisboa2', type: 'walk', x0: X.fixeads, x1: X.lusofona, len: 0.7 },
   { id: 'lusofona', type: 'stop', x: X.lusofona, len: 0.8, pose: 'sit' },
-  { id: 'lisboa3', type: 'walk', x0: X.lusofona, x1: X.hnf, len: 0.6 },
-  { id: 'hnf', type: 'stop', x: X.hnf, len: 0.9, pose: 'sit' },
-  { id: 'lisboa4', type: 'walk', x0: X.hnf, x1: X.station, len: 0.5 },
-  { id: 'norte', type: 'walk', x0: X.station, x1: X.felgueiras, len: 1.1, pose: 'train' },
+  { id: 'lisboa3', type: 'walk', x0: X.lusofona, x1: X.station, len: 0.6 },
+  { id: 'norte', type: 'walk', x0: X.station, x1: X.felgueiras, len: 1.4, pose: 'train' },
   { id: 'felgueiras', type: 'walk', x0: X.felgueiras, x1: X.estg, len: 0.9 },
   { id: 'estg', type: 'stop', x: X.estg, len: 0.8, pose: 'sit' },
   { id: 'porto', type: 'walk', x0: X.estg, x1: X.desk, len: 1.3 },
@@ -67,9 +68,14 @@ const smooth = (a, b, v) => {
 }
 const lerp = (a, b, t) => a + (b - a) * t
 
-// A parte do dia na cena do presente: de dia até 0.4, anoitece até 0.6, noite a seguir.
-export const DAY_T = 0.2
-export const NIGHT_T = 0.8
+// Onde cai o dia e a noite em cada cena fixa (t dentro do troço). No secundário volta a amanhecer no fim.
+export const DAY_NIGHT = { presente: [0.2, 0.8], secundario: [0.15, 0.7] }
+
+// Cenas em que a câmara larga o boneco e centra o compartimento: [x do boneco, centro].
+const PINS = [
+  [X.school, X.schoolRoom],
+  [X.desk, X.room],
+]
 
 const PLACES = [
   [X.porto, 'Porto'],
@@ -92,7 +98,18 @@ export function locate(u) {
   const t = clamp((u - seg.start) / seg.len)
   const x = seg.type === 'walk' ? lerp(seg.x0, seg.x1, t) : seg.x
   const past = u >= BY_ID.presente.start + BY_ID.presente.len
-  const night = seg.id === 'presente' ? smooth(0.42, 0.6, t) : past ? 1 : 0
+  let night = past ? 1 : 0
+  if (seg.id === 'presente') night = smooth(0.42, 0.6, t)
+  if (seg.id === 'secundario') night = smooth(0.34, 0.5, t) * (1 - smooth(0.9, 1, t))
+  let pin = 0
+  let pinX = 0
+  for (const [px, cx] of PINS) {
+    const p = 1 - smooth(0, 380, Math.abs(x - px))
+    if (p > pin) {
+      pin = p
+      pinX = cx
+    }
+  }
   const dawn = seg.id === 'caminho' ? smooth(0.1, 1, t) : seg.id === 'fim' ? 1 : 0
   const place = seg.id === 'fim' || seg.id === 'caminho' ? 'A seguir' : PLACES.find(([px]) => x >= px)[1]
   return {
@@ -104,8 +121,8 @@ export function locate(u) {
     night,
     dawn,
     place,
-    // Quanto a câmara larga o boneco para centrar o escritório.
-    pin: 1 - smooth(0, 380, Math.abs(x - X.desk)),
+    pin,
+    pinX,
   }
 }
 
@@ -113,10 +130,11 @@ export function locate(u) {
 export const MARKS = [
   { label: 'Barreiro', u: 0 },
   { label: 'Primeiro computador', u: at('pc', 0.25) },
+  { label: 'Secundário', u: at('secundario', 0.15) },
   { label: 'Lisboa', u: at('fixeads', 0.4) },
   { label: 'ESTG', u: at('estg', 0.4) },
-  { label: 'Porto Editora', u: at('presente', DAY_T) },
-  { label: 'À noite', u: at('presente', NIGHT_T) },
+  { label: 'Porto Editora', u: at('presente', DAY_NIGHT.presente[0]) },
+  { label: 'À noite', u: at('presente', DAY_NIGHT.presente[1]) },
   { label: 'A seguir', u: TOTAL },
 ]
 

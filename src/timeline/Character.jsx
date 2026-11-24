@@ -32,6 +32,7 @@ function heightAt(x) {
 }
 
 function outfitAt(x, night) {
+  if (x === X.school) return { shirt: night > 0.5 ? '#e39a3b' : '#3d7ea6' }
   if (night > 0.5) return { shirt: '#8a4452', hood: true }
   if (x < X.pc) return { shirt: '#e2574c' }
   if (x < X.pier) return { shirt: '#3d7ea6', pack: x > X.pc + 60 && '#e39a3b' }
