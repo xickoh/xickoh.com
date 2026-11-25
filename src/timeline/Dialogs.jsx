@@ -190,7 +190,7 @@ function About({ onClose }) {
   return (
     <Modal title="Sobre mim" className="about" onClose={onClose}>
       <div className="about-row">
-        <img className="portrait" src={photo} alt="Retrato do Francisco" />
+        <img className="about-photo" src={photo} alt="Retrato do Francisco" />
         <div>
           <p>
             Chamo-me Francisco, tenho {getAge()} anos e sou programador analista na Porto Editora.
