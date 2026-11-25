@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Basalto · Aquariofilia de água doce</title>
+  <meta name="description" content="Proposta de redesign da loja Basalto: aquários, equipamento, plantas, peixes e invertebrados de água doce.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="/basalto/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Saltar para o conteúdo</a>
+
+  <!-- Ícones (SVG inline, sem pedidos externos) -->
+  <svg width="0" height="0" class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2.5l2.2 11h10.6L20.5 7H7"/><circle cx="9.5" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.2-6 8-6s6.8 2 8 6"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24"><path d="M2 6h11v10H2zM13 10h5l4 3v3h-9z"/><circle cx="7" cy="18" r="1.8"/><circle cx="17.5" cy="18" r="1.8"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19M6 15h4"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+    <symbol id="i-fish" viewBox="0 0 24 24"><path d="M3 12c3-5 9-6 13-3l5-3v12l-5-3c-4 3-10 2-13-3Z"/><circle cx="8" cy="11" r=".8"/></symbol>
+    <symbol id="i-shrimp" viewBox="0 0 24 24"><path d="M5 9c2-4 9-5 12-1s1 9-4 10c-3 .6-5-1-5-3M5 9l-2-3M5 9l-3 1M9 13h6M10 16h4"/></symbol>
+    <symbol id="i-plant" viewBox="0 0 24 24"><path d="M12 21V9M12 13c-4 0-6-2-7-6 4 0 6 2 7 6ZM12 10c0-4 2-6 6-7 0 4-2 6-6 7Z"/></symbol>
+    <symbol id="i-tank" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 9c3-1.5 6 1.5 9 0s6 1.500 9 0M8 19v-4M15 19v-6"/></symbol>
+    <symbol id="i-bottle" viewBox="0 0 24 24"><path d="M10 3h4v4l2 3v10a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10l2-3zM8 14h8"/></symbol>
+    <symbol id="i-lamp" viewBox="0 0 24 24"><path d="M4 6h16l-2 5H6zM12 11v3M8 17l-1 3M12 17v3M16 17l1 3"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.500 4.500 4.500L19 7.500"/></symbol>
+  </svg>
+
+  <div class="promo-bar">
+    <p><svg class="icon" aria-hidden="true"><use href="#i-truck"/></svg> Envio gratuito para compras acima de 50&nbsp;€</p>
+  </div>
+
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="logo" href="#" aria-label="Basalto, página inicial">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span class="logo-text">Basalto</span>
+      </a>
+
+      <form class="search" role="search" action="#" method="get">
+        <label class="visually-hidden" for="q">Pesquisar produtos</label>
+        <input id="q" name="q" type="search" placeholder="Pesquisar peixes, plantas, filtros…" autocomplete="off">
+        <button type="submit" aria-label="Pesquisar"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg></button>
+      </form>
+
+      <div class="header-actions">
+        <div class="lang" role="group" aria-label="Idioma">
+          <a href="#" lang="pt" aria-current="true" aria-label="Português">PT</a>
+          <a href="#" lang="es" aria-label="Español">ES</a>
+          <a href="#" lang="en" aria-label="English">EN</a>
+        </div>
+        <button class="icon-btn" id="theme-toggle" type="button" aria-pressed="false">
+          <svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>
+          <span class="visually-hidden">Tema escuro</span>
+        </button>
+        <a class="icon-btn" href="#" aria-label="A minha conta">
+          <svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>
+        </a>
+        <a class="icon-btn cart" href="#">
+          <svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg>
+          <span class="visually-hidden">Carrinho,</span>
+          <span class="cart-count" id="cart-count">0</span>
+          <span class="visually-hidden">artigos</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="wrap nav-row">
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+        <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg> Menu
+      </button>
+      <nav id="menu-principal" class="main-nav" aria-label="Principal">
+        <ul>
+          <li class="has-panel">
+            <button type="button" class="nav-link" aria-expanded="false" aria-controls="painel-produtos">
+              Produtos <svg class="icon chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+            </button>
+            <div id="painel-produtos" class="panel" hidden>
+              <div class="panel-grid">
+                <div>
+                  <h2><a href="#">Equipamentos e Aquários</a></h2>
+                  <ul>
+                    <li><a href="#">Aquários</a></li>
+                    <li><a href="#">Filtros</a></li>
+                    <li><a href="#">Iluminação</a></li>
+                    <li><a href="#">Aquecimento</a></li>
+                    <li><a href="#">Ar e CO₂</a></li>
+                    <li><a href="#">Bombas</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h2><a href="#">Aquascaping e Manutenção</a></h2>
+                  <ul>
+                    <li><a href="#">Hardscape</a></li>
+                    <li><a href="#">Solos</a></li>
+                    <li><a href="#">Decorações</a></li>
+                    <li><a href="#">Acessórios de manutenção</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h2><a href="#">Consumíveis</a></h2>
+                  <ul>
+                    <li><a href="#">Alimentação</a></li>
+                    <li><a href="#">Condicionadores</a></li>
+                    <li><a href="#">Testes</a></li>
+                    <li><a href="#">Medicação</a></li>
+                    <li><a href="#">Fertilizantes</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h2><a href="#">Vivos</a></h2>
+                  <ul>
+                    <li><a href="#">Peixes de cardume</a></li>
+                    <li><a href="#">Peixes de fundo</a></li>
+                    <li><a href="#">Anabantídeos</a></li>
+                    <li><a href="#">Camarões</a></li>
+                    <li><a href="#">Caracóis</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h2><a href="#">Plantas</a></h2>
+                  <ul>
+                    <li><a href="#">Em vaso</a></li>
+                    <li><a href="#">In-vitro</a></li>
+                    <li><a href="#">Musgos</a></li>
+                    <li><a href="#">Flutuantes</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h2><a href="#">Mais</a></h2>
+                  <ul>
+                    <li><a href="#">Semi-novos / Outlet</a></li>
+                    <li><a href="#">Merchandising</a></li>
+                    <li><a href="#">Ver todos os produtos</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li><a class="nav-link" href="#servicos">Serviços</a></li>
+          <li><a class="nav-link" href="#bioinfo">BioInfo</a></li>
+          <li><a class="nav-link" href="#valores">Sobre nós</a></li>
+          <li><a class="nav-link" href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo" tabindex="-1">
+
+    <!-- Hero: texto real em vez de banners só-imagem em carrossel -->
+    <section class="hero" aria-labelledby="hero-titulo">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Aquariofilia de água doce</p>
+          <h1 id="hero-titulo">Aquários pequenos, <span>natureza a sério.</span></h1>
+          <p class="lead">Tudo para o teu nano-aquário low-tech: equipamento, plantas, peixes e invertebrados criados em cativeiro, com quarentena antes de cada envio.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#categorias">Ver produtos</a>
+            <a class="btn btn-ghost" href="#bioinfo">Sou principiante</a>
+          </div>
+        </div>
+        <ul class="promo-list" aria-label="Destaques da semana">
+          <li>
+            <a class="promo promo-a" href="#">
+              <span class="badge">Novo</span>
+              <strong>Luminária de clipar WRGB CT-128B</strong>
+              <span>14,95&nbsp;€ · ideal para cubos até 30&nbsp;cm</span>
+            </a>
+          </li>
+          <li>
+            <a class="promo promo-b" href="#">
+              <span class="badge">Novidade</span>
+              <strong>Fluval AquaClear</strong>
+              <span>Filtros de mochila, vários tamanhos</span>
+            </a>
+          </li>
+          <li>
+            <a class="promo promo-c" href="#">
+              <span class="badge">Informação</span>
+              <strong>Novo regime de encomendas</strong>
+              <span>Como funcionam os envios de vivos e plantas</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="benefits" aria-label="Vantagens">
+      <ul class="wrap benefits-grid">
+        <li><svg class="icon" aria-hidden="true"><use href="#i-truck"/></svg><div><strong>Envios rastreados</strong><span>Grátis acima de 50&nbsp;€</span></div></li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-card"/></svg><div><strong>Pagamento a prestações</strong><span>Sem juros, com a Klarna</span></div></li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-tag"/></svg><div><strong>Desconto por quantidade</strong><span>Em cardumes e camarões</span></div></li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg><div><strong>Apoio por WhatsApp</strong><span>936 679 327</span></div></li>
+      </ul>
+    </section>
+
+    <section id="categorias" class="section" aria-labelledby="cat-titulo">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="cat-titulo">Categorias</h2>
+          <a class="more" href="#">Todos os produtos</a>
+        </div>
+        <ul class="cat-grid">
+          <li><a class="cat" href="#"><span class="cat-img"><img src="https://assets.jumpseller.com/store/basalto/themes/676331/settings/1c3c79c3340d0551771a/equipamentos2.jpg" alt="" loading="lazy"><svg class="icon" aria-hidden="true"><use href="#i-tank"/></svg></span><span class="cat-name">Equipamentos e Aquários</span><span class="cat-sub">Aquários, filtros, luz</span></a></li>
+          <li><a class="cat" href="#"><span class="cat-img"><img src="https://assets.jumpseller.com/store/basalto/themes/676331/settings/5067808dc83a7c7a39f1/aquascaping.jpg" alt="" loading="lazy"><svg class="icon" aria-hidden="true"><use href="#i-drop"/></svg></span><span class="cat-name">Aquascaping e Manutenção</span><span class="cat-sub">Hardscape, solos, ferramentas</span></a></li>
+          <li><a class="cat" href="#"><span class="cat-img"><img src="https://assets.jumpseller.com/store/basalto/themes/676331/settings/862849d0a88a2fa93302/consumiveisbotao.jpg" alt="" loading="lazy"><svg class="icon" aria-hidden="true"><use href="#i-bottle"/></svg></span><span class="cat-name">Consumíveis</span><span class="cat-sub">Comida, testes, fertilizantes</span></a></li>
+          <li><a class="cat" href="#"><span class="cat-img"><img src="https://assets.jumpseller.com/store/basalto/themes/676331/settings/7b70e5d5a24a9c3e75a8/anoob.jpg" alt="" loading="lazy"><svg class="icon" aria-hidden="true"><use href="#i-plant"/></svg></span><span class="cat-name">Plantas</span><span class="cat-sub">Vaso, in-vitro, musgos</span></a></li>
+          <li><a class="cat" href="#"><span class="cat-img"><img src="https://assets.jumpseller.com/store/basalto/themes/676331/settings/c08f6c6b267f62bafab0/peixes.jpg" alt="" loading="lazy"><svg class="icon" aria-hidden="true"><use href="#i-fish"/></svg></span><span class="cat-name">Vivos</span><span class="cat-sub">Peixes e invertebrados</span></a></li>
+          <li><a class="cat" href="#"><span class="cat-img"><img src="https://assets.jumpseller.com/store/basalto/themes/676331/settings/3d2f0c65cc2522e017c9/outlet.jpg" alt="" loading="lazy"><svg class="icon" aria-hidden="true"><use href="#i-tag"/></svg></span><span class="cat-name">Semi-novos / Outlet</span><span class="cat-sub">Boas oportunidades</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="dest-titulo">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="dest-titulo">Produtos em destaque</h2>
+          <a class="more" href="#">Ver todos</a>
+        </div>
+        <ul class="product-grid" id="produtos">
+          <li class="product">
+            <div class="product-img t-tank"><svg class="icon" aria-hidden="true"><use href="#i-tank"/></svg></div>
+            <h3><a href="#">Aquários com tampa de correr em vidro</a></h3>
+            <p class="meta">Vários tamanhos</p>
+            <p class="price"><span class="visually-hidden">Preço:</span> desde <strong>29,90&nbsp;€</strong></p>
+            <button class="btn btn-secondary add" type="button" data-name="Aquário com tampa de correr">Escolher tamanho</button>
+          </li>
+          <li class="product">
+            <div class="product-img t-shrimp"><span class="badge badge-sale">−30%</span><svg class="icon" aria-hidden="true"><use href="#i-shrimp"/></svg></div>
+            <h3><a href="#">Caridina «Tangerine Tiger»</a></h3>
+            <p class="meta">Camarão · criado em cativeiro</p>
+            <p class="price"><span class="visually-hidden">Preço com desconto:</span> desde <strong class="sale">1,92&nbsp;€</strong> <span class="visually-hidden">Preço anterior:</span><s>2,75&nbsp;€</s></p>
+            <button class="btn btn-secondary add" type="button" data-name="Caridina Tangerine Tiger">Adicionar</button>
+          </li>
+          <li class="product">
+            <div class="product-img t-fish"><span class="badge badge-sale">−25%</span><svg class="icon" aria-hidden="true"><use href="#i-fish"/></svg></div>
+            <h3><a href="#">Barbo Torpedo &gt;12&nbsp;cm</a></h3>
+            <p class="meta"><i lang="la">Barbus denisonii</i></p>
+            <p class="price"><span class="visually-hidden">Preço com desconto:</span> desde <strong class="sale">5,95&nbsp;€</strong> <span class="visually-hidden">Preço anterior:</span><s>7,95&nbsp;€</s></p>
+            <button class="btn btn-secondary add" type="button" data-name="Barbo Torpedo">Adicionar</button>
+          </li>
+          <li class="product">
+            <div class="product-img t-food"><svg class="icon" aria-hidden="true"><use href="#i-bottle"/></svg></div>
+            <h3><a href="#">StreamBiz Discus Color Granules</a></h3>
+            <p class="meta">Alimentação seca</p>
+            <p class="price"><span class="visually-hidden">Preço:</span> desde <strong>8,90&nbsp;€</strong></p>
+            <button class="btn btn-secondary add" type="button" data-name="StreamBiz Discus Color Granules">Adicionar</button>
+          </li>
+          <li class="product">
+            <div class="product-img t-plant"><svg class="icon" aria-hidden="true"><use href="#i-plant"/></svg></div>
+            <h3><a href="#">Masterline Carbo</a></h3>
+            <p class="meta">Fertilizante · carbono líquido</p>
+            <p class="price"><span class="visually-hidden">Preço:</span> desde <strong>9,90&nbsp;€</strong></p>
+            <button class="btn btn-secondary add" type="button" data-name="Masterline Carbo">Adicionar</button>
+          </li>
+          <li class="product">
+            <div class="product-img t-food"><span class="badge">Novo</span><svg class="icon" aria-hidden="true"><use href="#i-bottle"/></svg></div>
+            <h3><a href="#">Alimentador automático JECOD AF-500</a></h3>
+            <p class="meta">Alimentadores</p>
+            <p class="price"><span class="visually-hidden">Preço:</span> <strong>29,90&nbsp;€</strong></p>
+            <button class="btn btn-secondary add" type="button" data-name="Alimentador JECOD AF-500">Adicionar</button>
+          </li>
+          <li class="product">
+            <div class="product-img t-lamp"><span class="badge">Novo</span><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg></div>
+            <h3><a href="#">Luminária de clipar WRGB CT-128B</a></h3>
+            <p class="meta">Iluminação</p>
+            <p class="price"><span class="visually-hidden">Preço:</span> <strong>14,95&nbsp;€</strong></p>
+            <button class="btn btn-secondary add" type="button" data-name="Luminária WRGB CT-128B">Adicionar</button>
+          </li>
+          <li class="product">
+            <div class="product-img t-tank"><svg class="icon" aria-hidden="true"><use href="#i-tank"/></svg></div>
+            <h3><a href="#">Cubo 30 completo – Basalto</a></h3>
+            <p class="meta">Kit pronto a montar</p>
+            <p class="price"><span class="visually-hidden">Preço:</span> <strong>65,00&nbsp;€</strong></p>
+            <button class="btn btn-secondary add" type="button" data-name="Cubo 30 completo">Adicionar</button>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="valores" class="section" aria-labelledby="val-titulo">
+      <div class="wrap values">
+        <div class="values-intro">
+          <p class="eyebrow">Os nossos valores</p>
+          <h2 id="val-titulo">Os animais estão em primeiro lugar</h2>
+          <p>A Basalto nasceu de amantes de animais com experiência em peixes pequenos e invertebrados de água doce, em aquários low-tech onde a natureza é o motor do ecossistema. Queremos que montar e manter um nano-aquário seja simples e sem sobressaltos.</p>
+          <a class="more" href="#">Conhecer a Basalto</a>
+        </div>
+        <ol class="values-list">
+          <li><span class="num" aria-hidden="true">1</span><div><h3>Bem-estar antes da venda</h3><p>Aclimatização à chegada, água controlada, boa alimentação e embalagem cuidada no envio.</p></div></li>
+          <li><span class="num" aria-hidden="true">2</span><div><h3>Só animais criados em cativeiro</h3><p>Sem captura selvagem: menos perdas no transporte e menos doenças.</p></div></li>
+          <li><span class="num" aria-hidden="true">3</span><div><h3>Quarentena</h3><p>Mínimo de 3 dias em observação. Animais doentes são separados e tratados.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="servicos" class="section section-alt" aria-labelledby="serv-titulo">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2 id="serv-titulo">Serviços</h2>
+            <p class="section-sub">Ao domicílio em Moita, Montijo, Barreiro, Palmela, Seixal, Quinta do Conde e Pinhal Novo.</p>
+          </div>
+        </div>
+        <ul class="service-grid">
+          <li class="service">
+            <h3>Manutenção de aquários</h3>
+            <p class="service-price"><strong>35&nbsp;€</strong> até 150&nbsp;L · <strong>50&nbsp;€</strong> de 150 a 500&nbsp;L</p>
+            <ul class="ticks">
+              <li>Troca parcial de água</li>
+              <li>Limpeza de filtro, vidros e substrato</li>
+              <li>Poda de plantas</li>
+              <li>Sessões de 90 a 180 minutos</li>
+            </ul>
+          </li>
+          <li class="service">
+            <h3>Instalação e aquascaping</h3>
+            <p class="service-price"><strong>25&nbsp;€</strong> por instalação</p>
+            <ul class="ticks">
+              <li>Montagem de móvel, aquário e equipamento</li>
+              <li>Hardscape, substrato e plantação</li>
+              <li>Transporte incluído até 60&nbsp;cm</li>
+            </ul>
+          </li>
+          <li class="service">
+            <h3>Testes de água</h3>
+            <p class="service-price"><strong>4,50&nbsp;€</strong> por teste</p>
+            <ul class="ticks">
+              <li>Amónia, nitritos, nitratos, pH, GH e KH</li>
+              <li>Resultados e conselhos por e-mail em 24&nbsp;h</li>
+              <li>Basta uma amostra de 30&nbsp;ml</li>
+            </ul>
+          </li>
+        </ul>
+        <p class="center"><a class="btn btn-primary" href="#contacto">Pedir orçamento</a></p>
+      </div>
+    </section>
+
+    <section id="bioinfo" class="section" aria-labelledby="bio-titulo">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2 id="bio-titulo">BioInfo: aprende antes de comprar</h2>
+            <p class="section-sub">Guias curtos, escritos por nós, para começares com o pé direito.</p>
+          </div>
+          <a class="more" href="#">Todos os 13 guias</a>
+        </div>
+        <ul class="guide-grid">
+          <li><a class="guide" href="#"><span class="guide-step">Passo 1</span><h3>Início na aquariofilia</h3><p>O que precisas mesmo para o primeiro aquário.</p></a></li>
+          <li><a class="guide" href="#"><span class="guide-step">Passo 2</span><h3>O ciclo do nitrogénio</h3><p>Porque é que o aquário tem de «ciclar» antes dos peixes.</p></a></li>
+          <li><a class="guide" href="#"><span class="guide-step">Passo 3</span><h3>Os parâmetros da água</h3><p>pH, GH, KH e companhia, sem complicar.</p></a></li>
+          <li><a class="guide" href="#"><span class="guide-step">Passo 4</span><h3>Aclimatização</h3><p>Como introduzir os animais novos em segurança.</p></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="contacto" class="section section-alt" aria-labelledby="cont-titulo">
+      <div class="wrap contact">
+        <div>
+          <h2 id="cont-titulo">Fala connosco</h2>
+          <p>Dúvidas, encomendas, garantias ou orçamentos de serviços. Respondemos o mais depressa possível.</p>
+          <ul class="contact-list">
+            <li><span>Telefone / WhatsApp</span><a href="tel:+351936679327">936 679 327</a></li>
+            <li><span>E-mail</span><a href="mailto:basalto.petshop@gmail.com">basalto.petshop@gmail.com</a></li>
+            <li><span>Redes sociais</span><span class="socials"><a href="https://www.instagram.com/basalto.petshop">Instagram</a> · <a href="https://www.facebook.com/basalto.petshop">Facebook</a> · <a href="https://youtube.com/@basaltopetshop">YouTube</a></span></li>
+          </ul>
+        </div>
+
+        <form class="form" id="contact-form" novalidate>
+          <p class="form-note">Os campos com <span aria-hidden="true">*</span><span class="visually-hidden">asterisco</span> são obrigatórios.</p>
+          <div class="field">
+            <label for="f-nome">Nome <span aria-hidden="true">*</span></label>
+            <input id="f-nome" name="nome" type="text" autocomplete="name" required aria-describedby="e-nome">
+            <p class="error" id="e-nome" hidden>Escreve o teu nome.</p>
+          </div>
+          <div class="field">
+            <label for="f-email">E-mail <span aria-hidden="true">*</span></label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email">
+            <p class="error" id="e-email" hidden>Escreve um e-mail válido, por exemplo nome@exemplo.pt.</p>
+          </div>
+          <div class="field">
+            <label for="f-tel">Telefone <span class="optional">(opcional)</span></label>
+            <input id="f-tel" name="telefone" type="tel" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="f-msg">Mensagem <span aria-hidden="true">*</span></label>
+            <textarea id="f-msg" name="mensagem" rows="4" required aria-describedby="e-msg"></textarea>
+            <p class="error" id="e-msg" hidden>Escreve a tua mensagem.</p>
+          </div>
+          <button class="btn btn-primary" type="submit">Enviar mensagem</button>
+          <p class="form-status" id="form-status" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <p class="logo"><span class="logo-mark" aria-hidden="true"></span><span class="logo-text">Basalto</span></p>
+        <p>Loja de aquariofilia de água doce, especializada em nano-aquários low-tech.</p>
+      </div>
+      <nav aria-label="Categorias no rodapé">
+        <h2>Categorias</h2>
+        <ul>
+          <li><a href="#">Equipamentos e Aquários</a></li>
+          <li><a href="#">Aquascaping e Manutenção</a></li>
+          <li><a href="#">Consumíveis</a></li>
+          <li><a href="#">Vivos</a></li>
+          <li><a href="#">Plantas</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Ajuda">
+        <h2>Ajuda</h2>
+        <ul>
+          <li><a href="#contacto">Contacto</a></li>
+          <li><a href="#">Termos e Condições</a></li>
+          <li><a href="#">Política de Privacidade</a></li>
+          <li><a href="https://www.livroreclamacoes.pt">Livro de Reclamações</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h2>Pagamentos</h2>
+        <ul class="pay">
+          <li>Multibanco</li><li>MB WAY</li><li>Visa</li><li>Mastercard</li><li>PayPal</li><li>Klarna</li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap footer-bottom">
+      <p>© 2026 Basalto. Todos os direitos reservados.</p>
+      <p>Proposta de redesign, não é o site oficial.</p>
+    </div>
+  </footer>
+
+  <a class="whatsapp" href="https://wa.me/351936679327?text=Ol%C3%A1%20Basalto!">
+    <svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>
+    <span>WhatsApp</span>
+  </a>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/basalto/js/main.js"></script>
+</body>
+</html>
