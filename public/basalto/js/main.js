@@ -66,70 +66,84 @@
   });
 
   // ---- Slideshow do hero (padrão «carousel» da WAI-ARIA) ----
-  // O tempo é a animação da barra do ponto ativo (CSS): pausar é congelá-la.
-  // Sem passagem automática com «reduzir movimento»; com rato ou foco de
-  // teclado em cima, pára; o botão de pausa pára de vez.
+  // O relógio é a animação CSS da barra do segmento ativo: pausar é congelá-la,
+  // e quando acaba (animationend) passa-se ao diapositivo seguinte.
+  // Pára com o rato ou o foco de teclado em cima; o botão de pausa pára de vez;
+  // com «reduzir movimento» não arranca sozinho.
   const car = $('#destaques');
   if (car) {
-    const track = $('.slides', car);
+    const live = $('.slides', car);
     const slides = $$('.slide', car);
-    const dotsBox = $('.dots', car);
+    const segsBox = $('.segs', car);
     const pauseBtn = $('#car-pause', car);
-    const viewport = $('.carousel-viewport', car);
+    const now = $('#car-now', car);
     let index = 0;
 
-    const dots = slides.map((_, i) => {
+    const segs = slides.map((slide, i) => {
       const b = document.createElement('button');
       b.type = 'button';
-      b.className = 'dot';
-      b.setAttribute('aria-label', `Destaque ${i + 1} de ${slides.length}`);
-      b.innerHTML = '<span class="pill"><span class="bar"></span></span>';
+      b.className = 'seg';
+      b.setAttribute('aria-label', `Destaque ${i + 1} de ${slides.length}: ${$('.slide-title', slide).textContent}`);
+      b.innerHTML = '<span class="seg-line"><span class="bar"></span></span>';
       b.addEventListener('click', () => go(i));
-      dotsBox.append(b);
+      segsBox.append(b);
       return b;
     });
 
     const go = (i) => {
       index = (i + slides.length) % slides.length;
-      track.style.transform = `translateX(${-100 * index}%)`;
-      slides.forEach((s, n) => { s.inert = n !== index; });
-      dots.forEach((d, n) => d.setAttribute('aria-current', String(n === index)));
+      slides.forEach((s, n) => {
+        s.classList.toggle('is-active', n === index);
+        s.inert = n !== index;
+      });
+      segs.forEach((b, n) => {
+        b.classList.toggle('is-done', n < index);
+        b.setAttribute('aria-current', String(n === index));
+      });
+      car.dataset.tone = slides[index].dataset.tone;
+      now.textContent = String(index + 1).padStart(2, '0');
     };
     const setPlaying = (on) => {
       car.classList.toggle('is-playing', on);
-      track.setAttribute('aria-live', on ? 'off' : 'polite');
+      live.setAttribute('aria-live', on ? 'off' : 'polite');
       pauseBtn.setAttribute('aria-label', on ? 'Parar a passagem automática' : 'Retomar a passagem automática');
       $('use', pauseBtn).setAttribute('href', on ? '#i-pause' : '#i-play');
     };
-    const held = () => document.hidden || car.matches(':hover') || !!car.querySelector(':focus-visible');
-    const refreshHold = () => car.classList.toggle('is-held', held());
+    const refreshHold = () => car.classList.toggle('is-held',
+      document.hidden || car.matches(':hover') || !!car.querySelector(':focus-visible'));
+    const later = () => setTimeout(refreshHold);
 
-    dotsBox.addEventListener('animationend', (e) => {
+    segsBox.addEventListener('animationend', (e) => {
       if (e.target.classList.contains('bar')) go(index + 1);
     });
     pauseBtn.addEventListener('click', () => setPlaying(!car.classList.contains('is-playing')));
     $('#car-prev', car).addEventListener('click', () => go(index - 1));
     $('#car-next', car).addEventListener('click', () => go(index + 1));
+    car.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') go(index - 1);
+      else if (e.key === 'ArrowRight') go(index + 1);
+    });
     car.addEventListener('mouseenter', refreshHold);
-    car.addEventListener('mouseleave', () => setTimeout(refreshHold));
-    car.addEventListener('focusin', refreshHold);
-    car.addEventListener('focusout', () => setTimeout(refreshHold));
+    car.addEventListener('mouseleave', later);
+    car.addEventListener('focusin', later);
+    car.addEventListener('focusout', later);
     document.addEventListener('visibilitychange', refreshHold);
 
-    // Deslizar no ecrã tátil
+    // Deslizar no ecrã tátil (o scroll vertical continua a ser do browser)
     let startX = null;
     let swiped = false;
-    viewport.addEventListener('pointerdown', (e) => {
+    live.style.touchAction = 'pan-y';
+    live.addEventListener('pointerdown', (e) => {
       if (e.pointerType !== 'mouse') { startX = e.clientX; swiped = false; }
     });
-    viewport.addEventListener('pointerup', (e) => {
+    live.addEventListener('pointerup', (e) => {
       if (startX === null) return;
       const dx = e.clientX - startX;
       startX = null;
       if (Math.abs(dx) > 40) { swiped = true; go(index + (dx < 0 ? 1 : -1)); }
     });
-    viewport.addEventListener('pointercancel', () => { startX = null; });
-    viewport.addEventListener('click', (e) => {
+    live.addEventListener('pointercancel', () => { startX = null; });
+    live.addEventListener('click', (e) => {
       if (swiped) { e.preventDefault(); swiped = false; }
     }, true);
 
