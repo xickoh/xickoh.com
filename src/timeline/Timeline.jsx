@@ -50,10 +50,17 @@ function place(st) {
   return { x, pose, lift, boatX, trainX: clamp(st.x, X.station, X.felgueiras) }
 }
 
-function useViewport() {
-  const [vp, setVp] = useState({ w: innerWidth, h: innerHeight })
+// A altura é a de 100svh (o `unit`), não o innerHeight: no telemóvel o innerHeight muda quando a
+// barra do browser se esconde a meio do scroll, e a cena dava um salto.
+function useViewport(unit) {
+  const read = () => ({ w: innerWidth, h: unit.current?.clientHeight || innerHeight })
+  const [vp, setVp] = useState(read)
   useEffect(() => {
-    const on = () => setVp({ w: innerWidth, h: innerHeight })
+    const on = () => setVp(v => {
+      const n = read()
+      return n.w === v.w && n.h === v.h ? v : n
+    })
+    on()
     addEventListener('resize', on)
     return () => removeEventListener('resize', on)
   }, [])
@@ -62,7 +69,7 @@ function useViewport() {
 
 export default function Timeline() {
   const unit = useRef(null) // 100svh: não muda quando a barra do browser do telemóvel se esconde
-  const vp = useViewport()
+  const vp = useViewport(unit)
   const [u, setU] = useState(FORCED ?? 0)
   const [maxU, setMaxU] = useState(FORCED ?? 0)
   const [open, setOpen] = useState(PARAMS.get('open'))
@@ -178,7 +185,7 @@ export default function Timeline() {
       <div ref={unit} className="unit" aria-hidden="true" />
       <div
         className={`stage ${portrait ? 'portrait' : ''} ${dark ? 'dark' : ''}`}
-        style={{ background: `rgb(${sky.join(' ')})` }}
+        style={{ background: `rgb(${sky.join(' ')})`, '--scene-h': `${sceneH}px` }}
       >
         <svg
           className="scene"
