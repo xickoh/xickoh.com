@@ -32,6 +32,8 @@
     <symbol id="i-bottle" viewBox="0 0 24 24"><path d="M10 3h4v4l2 3v10a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10l2-3zM8 14h8"/></symbol>
     <symbol id="i-lamp" viewBox="0 0 24 24"><path d="M4 6h16l-2 5H6zM12 11v3M8 17l-1 3M12 17v3M16 17l1 3"/></symbol>
     <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.500 4.500 4.500L19 7.500"/></symbol>
   </svg>
 
@@ -157,41 +159,81 @@
 
   <main id="conteudo" tabindex="-1">
 
-    <!-- Hero: texto real em vez de banners só-imagem em carrossel -->
+    <!-- Hero: slideshow com os banners da loja; o texto de cada banner repete-se na legenda (as imagens ficam com alt="") -->
     <section class="hero" aria-labelledby="hero-titulo">
-      <div class="wrap hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">Aquariofilia de água doce</p>
-          <h1 id="hero-titulo">Aquários pequenos, <span>natureza a sério.</span></h1>
-          <p class="lead">Tudo para o teu nano-aquário low-tech: equipamento, plantas, peixes e invertebrados criados em cativeiro, com quarentena antes de cada envio.</p>
-          <div class="hero-cta">
-            <a class="btn btn-primary" href="#categorias">Ver produtos</a>
-            <a class="btn btn-ghost" href="#bioinfo">Sou principiante</a>
+      <div class="wrap">
+        <section class="carousel" id="destaques" aria-roledescription="carrossel" aria-label="Destaques da semana">
+          <div class="carousel-viewport">
+            <ul class="slides" aria-live="polite">
+          <li class="slide" role="group" aria-roledescription="diapositivo" aria-label="1 de 4">
+            <a class="slide-link" href="#">
+              <img src="/basalto/img/banner-luminaria.jpg" width="1869" height="600" alt="" fetchpriority="high">
+              <span class="slide-caption">
+                <span class="badge">Novo</span>
+                <span class="slide-text"><strong>Novas lâmpadas RGB a um preço irresistível</strong> <span class="desc">Luminária de clipar WRGB CT-128B · 14,95&nbsp;€</span></span>
+                <span class="go" aria-hidden="true">Ver</span>
+              </span>
+            </a>
+          </li>
+          <li class="slide" role="group" aria-roledescription="diapositivo" aria-label="2 de 4">
+            <a class="slide-link" href="#">
+              <img src="/basalto/img/banner-encomendas.jpg" width="1869" height="600" alt="" loading="lazy">
+              <span class="slide-caption">
+                <span class="badge">Informação</span>
+                <span class="slide-text"><strong>Novos prazos para encomendas de plantas e peixes</strong> <span class="desc">Conhece o novo regime de encomendas de vivos</span></span>
+                <span class="go" aria-hidden="true">Ver</span>
+              </span>
+            </a>
+          </li>
+          <li class="slide" role="group" aria-roledescription="diapositivo" aria-label="3 de 4">
+            <a class="slide-link" href="#">
+              <img src="/basalto/img/banner-aquaclear.jpg" width="1869" height="600" alt="" loading="lazy">
+              <span class="slide-caption">
+                <span class="badge">Novidade</span>
+                <span class="slide-text"><strong>Nova linha de filtros Fluval AquaClear</strong> <span class="desc">Filtros de mochila, vários tamanhos</span></span>
+                <span class="go" aria-hidden="true">Ver</span>
+              </span>
+            </a>
+          </li>
+          <li class="slide" role="group" aria-roledescription="diapositivo" aria-label="4 de 4">
+            <a class="slide-link" href="#">
+              <img src="/basalto/img/banner-ntlabs.jpg" width="1869" height="600" alt="" loading="lazy">
+              <span class="slide-caption">
+                <span class="badge badge-sale">Promoção</span>
+                <span class="slide-text"><strong>Kit de testes 6 em 1 NT Labs</strong> <span class="desc">NH3, NO2, NO3, pH, GH e KH · <strong>39,90&nbsp;€</strong> <span class="visually-hidden">em vez de</span><s>49,90&nbsp;€</s></span></span>
+                <span class="go" aria-hidden="true">Ver</span>
+              </span>
+            </a>
+          </li>
+            </ul>
+          </div>
+          <div class="carousel-controls">
+            <button class="car-btn" id="car-pause" type="button" aria-label="Parar a passagem automática">
+              <svg class="icon" aria-hidden="true"><use href="#i-pause"/></svg>
+            </button>
+            <button class="car-btn car-prev" id="car-prev" type="button" aria-label="Destaque anterior">
+              <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="dots" role="group" aria-label="Escolher destaque"></div>
+            <button class="car-btn car-next" id="car-next" type="button" aria-label="Destaque seguinte">
+              <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+            </button>
+          </div>
+        </section>
+
+        <div class="hero-intro">
+          <div>
+            <p class="eyebrow">Aquariofilia de água doce</p>
+            <h1 id="hero-titulo">Aquários pequenos, <span>natureza a sério.</span></h1>
+          </div>
+          <div>
+            <p class="lead">Tudo para o teu nano-aquário low-tech: equipamento, plantas, peixes e invertebrados criados em cativeiro, com quarentena antes de cada envio.</p>
+            <div class="hero-cta">
+              <a class="btn btn-primary" href="#categorias">Ver produtos</a>
+              <a class="btn btn-ghost" href="#bioinfo">Sou principiante</a>
+            </div>
           </div>
         </div>
-        <ul class="promo-list" aria-label="Destaques da semana">
-          <li>
-            <a class="promo promo-a" href="#">
-              <span class="badge">Novo</span>
-              <strong>Luminária de clipar WRGB CT-128B</strong>
-              <span>14,95&nbsp;€ · ideal para cubos até 30&nbsp;cm</span>
-            </a>
-          </li>
-          <li>
-            <a class="promo promo-b" href="#">
-              <span class="badge">Novidade</span>
-              <strong>Fluval AquaClear</strong>
-              <span>Filtros de mochila, vários tamanhos</span>
-            </a>
-          </li>
-          <li>
-            <a class="promo promo-c" href="#">
-              <span class="badge">Informação</span>
-              <strong>Novo regime de encomendas</strong>
-              <span>Como funcionam os envios de vivos e plantas</span>
-            </a>
-          </li>
-        </ul>
       </div>
     </section>
 

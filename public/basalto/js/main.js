@@ -65,6 +65,79 @@
     if (e.target.closest('a')) setMenu(false);
   });
 
+  // ---- Slideshow do hero (padrão «carousel» da WAI-ARIA) ----
+  // O tempo é a animação da barra do ponto ativo (CSS): pausar é congelá-la.
+  // Sem passagem automática com «reduzir movimento»; com rato ou foco de
+  // teclado em cima, pára; o botão de pausa pára de vez.
+  const car = $('#destaques');
+  if (car) {
+    const track = $('.slides', car);
+    const slides = $$('.slide', car);
+    const dotsBox = $('.dots', car);
+    const pauseBtn = $('#car-pause', car);
+    const viewport = $('.carousel-viewport', car);
+    let index = 0;
+
+    const dots = slides.map((_, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'dot';
+      b.setAttribute('aria-label', `Destaque ${i + 1} de ${slides.length}`);
+      b.innerHTML = '<span class="pill"><span class="bar"></span></span>';
+      b.addEventListener('click', () => go(i));
+      dotsBox.append(b);
+      return b;
+    });
+
+    const go = (i) => {
+      index = (i + slides.length) % slides.length;
+      track.style.transform = `translateX(${-100 * index}%)`;
+      slides.forEach((s, n) => { s.inert = n !== index; });
+      dots.forEach((d, n) => d.setAttribute('aria-current', String(n === index)));
+    };
+    const setPlaying = (on) => {
+      car.classList.toggle('is-playing', on);
+      track.setAttribute('aria-live', on ? 'off' : 'polite');
+      pauseBtn.setAttribute('aria-label', on ? 'Parar a passagem automática' : 'Retomar a passagem automática');
+      $('use', pauseBtn).setAttribute('href', on ? '#i-pause' : '#i-play');
+    };
+    const held = () => document.hidden || car.matches(':hover') || !!car.querySelector(':focus-visible');
+    const refreshHold = () => car.classList.toggle('is-held', held());
+
+    dotsBox.addEventListener('animationend', (e) => {
+      if (e.target.classList.contains('bar')) go(index + 1);
+    });
+    pauseBtn.addEventListener('click', () => setPlaying(!car.classList.contains('is-playing')));
+    $('#car-prev', car).addEventListener('click', () => go(index - 1));
+    $('#car-next', car).addEventListener('click', () => go(index + 1));
+    car.addEventListener('mouseenter', refreshHold);
+    car.addEventListener('mouseleave', () => setTimeout(refreshHold));
+    car.addEventListener('focusin', refreshHold);
+    car.addEventListener('focusout', () => setTimeout(refreshHold));
+    document.addEventListener('visibilitychange', refreshHold);
+
+    // Deslizar no ecrã tátil
+    let startX = null;
+    let swiped = false;
+    viewport.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') { startX = e.clientX; swiped = false; }
+    });
+    viewport.addEventListener('pointerup', (e) => {
+      if (startX === null) return;
+      const dx = e.clientX - startX;
+      startX = null;
+      if (Math.abs(dx) > 40) { swiped = true; go(index + (dx < 0 ? 1 : -1)); }
+    });
+    viewport.addEventListener('pointercancel', () => { startX = null; });
+    viewport.addEventListener('click', (e) => {
+      if (swiped) { e.preventDefault(); swiped = false; }
+    }, true);
+
+    go(0);
+    setPlaying(!matchMedia('(prefers-reduced-motion: reduce)').matches);
+    car.classList.add('is-ready');
+  }
+
   // ---- Carrinho (demonstração) com anúncio para leitores de ecrã ----
   const count = $('#cart-count');
   const toast = $('#toast');
